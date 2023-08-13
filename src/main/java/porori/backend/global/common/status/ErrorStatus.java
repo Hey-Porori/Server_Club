@@ -16,6 +16,6 @@ public enum ErrorStatus {
 
     INVALID_JWT(401, "유효하지 않은 JWT입니다.");
 
-    private final int code;
+    private final int statusCode;
     private final String message;
 }

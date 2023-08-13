@@ -9,15 +9,13 @@ import porori.backend.global.common.status.SuccessStatus;
 @JsonPropertyOrder({"code", "result", "message", "data"})
 public class SuccessResponse<T> {
     private int code;
-    private String result;
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public SuccessResponse(SuccessStatus status, T data) {
-        this.code = status.getCode();
-        this.result = status.getResult();
+        this.code = status.getStatusCode();
         this.message = status.getMessage();
         this.data = data;
     }

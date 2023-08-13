@@ -12,11 +12,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     protected ResponseEntity<FailResponse> handleBaseException(BaseException exception) {
-        return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getCode())).body(new FailResponse(exception.getError()));
+        return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getStatusCode())).body(new FailResponse(exception.getError()));
     }
 
     @ExceptionHandler({UserException.class})
     protected ResponseEntity<FailResponse> handleUserException(UserException exception) {
-        return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getCode())).body(new FailResponse(exception.getError()));
+        return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getStatusCode())).body(new FailResponse(exception.getError()));
     }
 }
