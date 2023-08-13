@@ -21,6 +21,9 @@ public class Club extends BaseEntity {
     private Long clubId;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -44,7 +47,8 @@ public class Club extends BaseEntity {
     private List<Member> members;
 
     @Builder
-    protected Club(String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, List<Qualification> qualifications, String location, int limitMemberNumber) {
+    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, List<Qualification> qualifications, String location, int limitMemberNumber) {
+        this.userId = userId;
         this.name = name;
         this.subjectTitle = subjectTitle;
         this.subjectDetail = subjectDetail;
