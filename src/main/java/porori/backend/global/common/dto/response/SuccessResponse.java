@@ -6,16 +6,16 @@ import lombok.Getter;
 import porori.backend.global.common.status.SuccessStatus;
 
 @Getter
-@JsonPropertyOrder({"code", "result", "message", "data"})
+@JsonPropertyOrder({"statusCode", "message", "data"})
 public class SuccessResponse<T> {
-    private int code;
+    private int statusCode;
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public SuccessResponse(SuccessStatus status, T data) {
-        this.code = status.getStatusCode();
+        this.statusCode = status.getStatusCode();
         this.message = status.getMessage();
         this.data = data;
     }

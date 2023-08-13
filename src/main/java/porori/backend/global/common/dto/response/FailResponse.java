@@ -6,9 +6,9 @@ import lombok.Getter;
 import porori.backend.global.common.status.ErrorStatus;
 
 @Getter
-@JsonPropertyOrder({"code", "error", "message", "description"})
+@JsonPropertyOrder({"statusCode", "error", "message", "description"})
 public class FailResponse {
-    private int code;
+    private int statusCode;
     private ErrorStatus error;
     private String message;
 
@@ -16,13 +16,13 @@ public class FailResponse {
     private String description;
 
     public FailResponse(ErrorStatus status) {
-        this.code = status.getStatusCode();
+        this.statusCode = status.getStatusCode();
         this.error = status;
         this.message = status.getMessage();
     }
 
     public FailResponse(ErrorStatus status, String description) {
-        this.code = status.getStatusCode();
+        this.statusCode = status.getStatusCode();
         this.error = status;
         this.message = status.getMessage();
         this.description = description;
