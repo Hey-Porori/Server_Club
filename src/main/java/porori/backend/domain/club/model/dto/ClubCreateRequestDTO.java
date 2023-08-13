@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor
 @Getter
 public class ClubCreateRequestDTO {
@@ -14,15 +12,15 @@ public class ClubCreateRequestDTO {
     private String subjectDetail;
     private String location;
     private int limitMemberNumber;
-    private List<String> qualifications;
+    private String description;
 
     @Builder
-    public ClubCreateRequestDTO(String name, String subjectTitle, String subjectDetail, String location, int limitMemberNumber, List<String> qualifications) {
+    public ClubCreateRequestDTO(String name, String subjectTitle, String subjectDetail, String location, int limitMemberNumber, String description) {
         this.name = name;
         this.subjectTitle = subjectTitle;
         this.subjectDetail = subjectDetail;
         this.location = location;
         this.limitMemberNumber = limitMemberNumber;
-        this.qualifications = qualifications;
+        this.description = description;
     }
 }

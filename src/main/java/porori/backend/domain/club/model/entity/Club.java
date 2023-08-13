@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.member.model.entity.Member;
-import porori.backend.domain.qualification.model.entity.Qualification;
 import porori.backend.global.common.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -34,8 +33,8 @@ public class Club extends BaseEntity {
     @Column(nullable = false)
     private SubjectDetail subjectDetail;
 
-    @OneToMany(mappedBy = "club")
-    private List<Qualification> qualifications;
+    @Column
+    private String description;
 
     @Column(nullable = false)
     private String location;
@@ -47,12 +46,12 @@ public class Club extends BaseEntity {
     private List<Member> members;
 
     @Builder
-    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, List<Qualification> qualifications, String location, int limitMemberNumber) {
+    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber) {
         this.userId = userId;
         this.name = name;
         this.subjectTitle = subjectTitle;
         this.subjectDetail = subjectDetail;
-        this.qualifications = qualifications;
+        this.description = description;
         this.location = location;
         this.limitMemberNumber = limitMemberNumber;
     }
