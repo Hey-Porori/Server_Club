@@ -6,9 +6,16 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class ErrorStatus {
+public enum ErrorStatus {
+
+    /**
+     * Error Code
+     * 400:
+     * 401: JWT 오류
+     */
+
+    INVALID_JWT(401, "유효하지 않은 JWT입니다.");
 
     private final int code;
-    private final String result;
     private final String message;
 }

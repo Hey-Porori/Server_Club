@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class SuccessStatus {
+public enum SuccessStatus {
 
-    private final int code;
-    private final String result;
+    CREATE_CLUB(201, "동호회 등록이 완료되었습니다.");
+
+    private final int statusCode;
     private final String message;
 }
