@@ -20,6 +20,8 @@ public enum ErrorStatus {
 
     EXIST_APPLICATION(400, "이미 가입 신청한 동호회입니다."),
 
+    FULL_CLUB_NUMBER(400, "동호회 인원이 모두 찼습니다."),
+
     INVALID_JWT(401, "유효하지 않은 JWT입니다.");
 
     private final int statusCode;

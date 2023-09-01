@@ -11,10 +11,10 @@ import porori.backend.domain.application.repository.ApplicationRepository;
 import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
+import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.user.service.UserService;
 
-import static porori.backend.global.common.status.ErrorStatus.EXIST_APPLICATION;
-import static porori.backend.global.common.status.ErrorStatus.INVALID_CLUB;
+import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +24,7 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ClubRepository clubRepository;
+    private final MemberRepository memberRepository;
 
     public ApplicationCreateResponseDTO createApplication(String token, ApplicationCreateRequestDTO applicationCreateRequestDTO) {
         Long userId = userService.getUserId(token);
@@ -31,6 +32,7 @@ public class ApplicationService {
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         verifyAlreadyApplied(club, userId);
+        verifyClubLimitMember(club);
 
         Application application = Application.builder()
                 .club(club)
@@ -45,5 +47,10 @@ public class ApplicationService {
     private void verifyAlreadyApplied(Club club, Long userId) {
         if (applicationRepository.existsByClubAndUserId(club, userId))
             throw new ApplicationException(EXIST_APPLICATION);
+    }
+
+    private void verifyClubLimitMember(Club club) {
+        if (memberRepository.findByClub(club).size() >= club.getLimitMemberNumber())
+            throw new ApplicationException(FULL_CLUB_NUMBER);
     }
 }
