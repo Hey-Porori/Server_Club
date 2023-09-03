@@ -40,6 +40,12 @@ public class ClubController {
         return new SuccessResponse<>(SUCCESS, clubService.getSubjectClubs(subjectTitle));
     }
 
+    @GetMapping("/detail")
+    @Operation(summary = "동호회 정보 조회", description = "동호회 ID로 동호회를 조회한다.")
+    public SuccessResponse<ClubGetResponseDTO> getClub(@RequestParam Long clubId) {
+        return new SuccessResponse<>(SUCCESS, clubService.getClub(clubId));
+    }
+
     @PatchMapping("/update")
     @Operation(summary = "동호회 수정", description = "자신이 관리자인 동호회를 수정한다.")
     public SuccessResponse<ClubGetResponseDTO> updateClub(@RequestHeader("Authorization") String token,

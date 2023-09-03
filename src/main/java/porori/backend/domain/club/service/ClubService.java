@@ -69,6 +69,12 @@ public class ClubService {
             throw new ClubException(INVALID_SUBJECT_TITLE);
     }
 
+    public ClubGetResponseDTO getClub(Long clubId) {
+        Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+
+        return ClubGetResponseDTO.from(findClub);
+    }
+
     public ClubGetResponseDTO updateClub(String token, ClubUpdateRequestDTO clubUpdateRequestDTO) {
         Long userId = userService.getUserId(token);
         Long clubId = clubUpdateRequestDTO.getClubId();
