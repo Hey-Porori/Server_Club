@@ -21,11 +21,17 @@ public class ClubController {
 
     private final ClubService clubService;
 
-    @PostMapping(value = "/create")
+    @PostMapping("/create")
     @Operation(summary = "동호회 생성", description = "유저가 동호회를 생성한다.")
     public SuccessResponse<ClubCreateResponseDTO> createClub(@RequestHeader("Authorization") String token,
                                                             @RequestBody ClubCreateRequestDTO clubCreateRequestDTO) {
         return new SuccessResponse<>(CREATE_CLUB, clubService.createClub(token, clubCreateRequestDTO));
+    }
+
+    @GetMapping("/subjects")
+    @Operation(summary = "동호회 주제 조회", description = "동호회 생성을 위해 동호회의 주제를 조회한다.")
+    public SuccessResponse<List<ClubSubjectResponseDTO>> getClubSubjects() {
+        return new SuccessResponse<>(SUCCESS, clubService.getClubSubjects());
     }
 
     @GetMapping("/all")

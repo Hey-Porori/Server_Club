@@ -5,13 +5,15 @@ import org.springframework.stereotype.Service;
 import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.dto.*;
 import porori.backend.domain.club.model.entity.Club;
+import porori.backend.domain.club.model.entity.SubjectDetail;
+import porori.backend.domain.club.model.entity.SubjectTitle;
 import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 import porori.backend.global.common.status.BaseStatus;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static porori.backend.domain.club.model.entity.SubjectDetail.valueOfDetail;
@@ -44,6 +46,28 @@ public class ClubService {
         clubRepository.save(club);
         memberService.addMember(club, userId, Role.MANAGER);
         return ClubCreateResponseDTO.from(club);
+    }
+
+    public List<ClubSubjectResponseDTO> getClubSubjects() {
+        Map<String, List<String>> map = new HashMap<>();
+        Arrays.stream(SubjectTitle.values())
+                .filter(subjectTitle -> !(subjectTitle.getTitle().equals("")))
+                .forEach(
+                        subjectTitle -> map.put(subjectTitle.getTitle(), new ArrayList<>())
+                );
+
+        Arrays.stream(SubjectDetail.values())
+                .filter(subjectDetail -> !(subjectDetail.getParentSubject() == null))
+                .forEach(
+                        subjectDetail -> {
+                            List<String> details = map.get(subjectDetail.getParentSubject().getTitle());
+                            details.add(subjectDetail.getDetail());
+                        }
+                );
+
+        return map.entrySet().stream()
+                .map(ClubSubjectResponseDTO::of)
+                .collect(Collectors.toList());
     }
 
     public List<ClubGetResponseDTO> getAllClubs() {
