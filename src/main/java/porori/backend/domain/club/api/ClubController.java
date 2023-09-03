@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import porori.backend.domain.club.model.dto.ClubCreateRequestDTO;
-import porori.backend.domain.club.model.dto.ClubCreateResponseDTO;
-import porori.backend.domain.club.model.dto.ClubGetResponseDTO;
-import porori.backend.domain.club.model.dto.ClubUpdateRequestDTO;
+import porori.backend.domain.club.model.dto.*;
 import porori.backend.domain.club.service.ClubService;
 import porori.backend.global.common.dto.response.SuccessResponse;
 
@@ -48,6 +45,13 @@ public class ClubController {
     public SuccessResponse<ClubGetResponseDTO> updateClub(@RequestHeader("Authorization") String token,
                                                              @RequestBody ClubUpdateRequestDTO clubUpdateRequestDTO) {
         return new SuccessResponse<>(SUCCESS, clubService.updateClub(token, clubUpdateRequestDTO));
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "동호회 삭제", description = "자신이 관리자인 동호회를 삭제한다.")
+    public SuccessResponse<ClubDeleteResponseDTO> deleteClub(@RequestHeader("Authorization") String token,
+                                                             @RequestParam Long clubId) {
+        return new SuccessResponse<>(SUCCESS, clubService.deleteClub(token, clubId));
     }
 
 }

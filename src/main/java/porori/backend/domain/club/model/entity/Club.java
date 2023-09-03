@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.member.model.entity.Member;
 import porori.backend.global.common.entity.BaseEntity;
+import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
 import java.util.List;
@@ -63,5 +64,9 @@ public class Club extends BaseEntity {
 
     public void increaseCurrentMemberNumber() {
         this.currentMemberNumber = this.currentMemberNumber + 1;
+    }
+
+    public void changeStatus(BaseStatus status) {
+        this.status = status;
     }
 }

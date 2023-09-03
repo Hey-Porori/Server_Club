@@ -3,10 +3,7 @@ package porori.backend.domain.club.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import porori.backend.domain.club.exception.ClubException;
-import porori.backend.domain.club.model.dto.ClubCreateRequestDTO;
-import porori.backend.domain.club.model.dto.ClubCreateResponseDTO;
-import porori.backend.domain.club.model.dto.ClubGetResponseDTO;
-import porori.backend.domain.club.model.dto.ClubUpdateRequestDTO;
+import porori.backend.domain.club.model.dto.*;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
@@ -96,13 +93,24 @@ public class ClubService {
         return ClubGetResponseDTO.from(club);
     }
 
-    private void verifyClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_MANAGE_CLUB);
-    }
-
     private void verifyCurrentClubMemberNumber(int limitMemberNumber, int currentMemberNumber) {
         if (limitMemberNumber <= currentMemberNumber)
             throw new ClubException(FULL_CLUB_NUMBER);
+    }
+
+    public ClubDeleteResponseDTO deleteClub(String token, Long clubId) {
+        Long userId = userService.getUserId(token);
+
+        Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+        verifyClubManager(clubId, userId);
+
+        findClub.changeStatus(BaseStatus.INACTIVE);
+        clubRepository.save(findClub);
+        return ClubDeleteResponseDTO.from(findClub);
+    }
+
+    private void verifyClubManager(Long clubId, Long userId) {
+        if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
+            throw new ClubException(NOT_MANAGE_CLUB);
     }
 }

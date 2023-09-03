@@ -12,8 +12,9 @@ import java.time.format.DateTimeFormatter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
+
     @Enumerated(EnumType.STRING)
-    private BaseStatus status;
+    protected BaseStatus status;
 
     @CreatedDate
     @Column(updatable = false)
