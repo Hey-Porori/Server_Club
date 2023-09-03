@@ -32,6 +32,7 @@ public class ClubService {
                 .description(clubCreateRequestDTO.getDescription())
                 .location(clubCreateRequestDTO.getLocation())
                 .limitMemberNumber(clubCreateRequestDTO.getLimitMemberNumber())
+                .currentMemberNumber(0)
                 .build();
 
         clubRepository.save(club);

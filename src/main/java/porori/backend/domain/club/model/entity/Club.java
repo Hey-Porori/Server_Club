@@ -42,11 +42,14 @@ public class Club extends BaseEntity {
     @Column(nullable = false)
     private int limitMemberNumber;
 
+    @Column(nullable = false)
+    private int currentMemberNumber;
+
     @OneToMany(mappedBy="club")
     private List<Member> members;
 
     @Builder
-    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber) {
+    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber, int currentMemberNumber) {
         this.userId = userId;
         this.name = name;
         this.subjectTitle = subjectTitle;
@@ -54,5 +57,10 @@ public class Club extends BaseEntity {
         this.description = description;
         this.location = location;
         this.limitMemberNumber = limitMemberNumber;
+        this.currentMemberNumber = currentMemberNumber;
+    }
+
+    public void increaseCurrentMemberNumber() {
+        this.currentMemberNumber = this.currentMemberNumber + 1;
     }
 }
