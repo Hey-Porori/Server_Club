@@ -1,7 +1,6 @@
 package porori.backend.domain.club.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,13 +27,4 @@ public class ClubCreateRequestDTO {
     @Schema(description = "동호회 설명", example = "즐겁게 등산합시다")
     private String description;
 
-    @Builder
-    public ClubCreateRequestDTO(String name, String subjectTitle, String subjectDetail, String location, int limitMemberNumber, String description) {
-        this.name = name;
-        this.subjectTitle = subjectTitle;
-        this.subjectDetail = subjectDetail;
-        this.location = location;
-        this.limitMemberNumber = limitMemberNumber;
-        this.description = description;
-    }
 }
