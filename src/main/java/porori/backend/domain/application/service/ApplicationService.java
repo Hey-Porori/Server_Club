@@ -3,7 +3,6 @@ package porori.backend.domain.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import porori.backend.domain.application.exception.ApplicationException;
-import porori.backend.domain.application.model.dto.ApplicationCreateRequestDTO;
 import porori.backend.domain.application.model.dto.ApplicationCreateResponseDTO;
 import porori.backend.domain.application.model.entity.Application;
 import porori.backend.domain.application.model.entity.ApplicationStatus;
@@ -26,9 +25,8 @@ public class ApplicationService {
     private final ClubRepository clubRepository;
     private final MemberRepository memberRepository;
 
-    public ApplicationCreateResponseDTO createApplication(String token, ApplicationCreateRequestDTO applicationCreateRequestDTO) {
+    public ApplicationCreateResponseDTO createApplication(String token, Long clubId) {
         Long userId = userService.getUserId(token);
-        Long clubId = applicationCreateRequestDTO.getClubId();
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         verifyAlreadyApplied(club, userId);
