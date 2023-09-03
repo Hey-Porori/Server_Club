@@ -36,4 +36,10 @@ public class ClubController {
         return new SuccessResponse<>(SUCCESS, clubService.getAllClubs());
     }
 
+    @GetMapping("/subject/{subjectTitle}")
+    @Operation(summary = "동호회 주제에 따라 조회", description = "동호회 주제로 필터링하여 조회한다.")
+    public SuccessResponse<List<ClubGetResponseDTO>> getSubjectClubs(@PathVariable String subjectTitle) {
+        return new SuccessResponse<>(SUCCESS, clubService.getSubjectClubs(subjectTitle));
+    }
+
 }

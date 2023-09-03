@@ -2,6 +2,7 @@ package porori.backend.domain.club.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.dto.ClubCreateRequestDTO;
 import porori.backend.domain.club.model.dto.ClubCreateResponseDTO;
 import porori.backend.domain.club.model.dto.ClubGetResponseDTO;
@@ -16,7 +17,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static porori.backend.domain.club.model.entity.SubjectDetail.valueOfDetail;
+import static porori.backend.domain.club.model.entity.SubjectTitle.EMPTY;
 import static porori.backend.domain.club.model.entity.SubjectTitle.valueOfTitle;
+import static porori.backend.global.common.status.ErrorStatus.INVALID_SUBJECT_TITLE;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +52,22 @@ public class ClubService {
         List<Club> clubs = clubRepository.findByStatus(BaseStatus.ACTIVE);
 
         return clubs.stream()
-            .map(ClubGetResponseDTO::from)
-            .collect(Collectors.toList());
+                .map(ClubGetResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClubGetResponseDTO> getSubjectClubs(String title) {
+        verifySubjectTitle(title);
+
+        List<Club> clubs = clubRepository.findBySubjectTitleAndStatus(valueOfTitle(title), BaseStatus.ACTIVE);
+
+        return clubs.stream()
+                .map(ClubGetResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    private void verifySubjectTitle(String title) {
+        if (valueOfTitle(title).equals(EMPTY))
+            throw new ClubException(INVALID_SUBJECT_TITLE);
     }
 }

@@ -3,6 +3,7 @@ package porori.backend.domain.club.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import porori.backend.domain.club.model.entity.Club;
+import porori.backend.domain.club.model.entity.SubjectTitle;
 import porori.backend.global.common.status.BaseStatus;
 
 import java.util.List;
@@ -11,4 +12,6 @@ import java.util.List;
 public interface ClubRepository extends JpaRepository<Club, Long> {
 
     List<Club> findByStatus(BaseStatus status);
+
+    List<Club> findBySubjectTitleAndStatus(SubjectTitle subjectTitle, BaseStatus status);
 }
