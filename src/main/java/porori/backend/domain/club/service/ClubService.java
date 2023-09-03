@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import porori.backend.domain.club.model.dto.ClubCreateRequestDTO;
 import porori.backend.domain.club.model.dto.ClubCreateResponseDTO;
+import porori.backend.domain.club.model.dto.ClubGetResponseDTO;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
+import porori.backend.global.common.status.BaseStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static porori.backend.domain.club.model.entity.SubjectDetail.valueOfDetail;
 import static porori.backend.domain.club.model.entity.SubjectTitle.valueOfTitle;
@@ -38,5 +43,13 @@ public class ClubService {
         clubRepository.save(club);
         memberService.addMember(club, userId, Role.MANAGER);
         return ClubCreateResponseDTO.from(club);
+    }
+
+    public List<ClubGetResponseDTO> getAllClubs() {
+        List<Club> clubs = clubRepository.findByStatus(BaseStatus.ACTIVE);
+
+        return clubs.stream()
+            .map(ClubGetResponseDTO::from)
+            .collect(Collectors.toList());
     }
 }
