@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import porori.backend.domain.club.model.dto.ClubCreateRequestDTO;
 import porori.backend.domain.club.model.dto.ClubCreateResponseDTO;
 import porori.backend.domain.club.model.dto.ClubGetResponseDTO;
+import porori.backend.domain.club.model.dto.ClubUpdateRequestDTO;
 import porori.backend.domain.club.service.ClubService;
 import porori.backend.global.common.dto.response.SuccessResponse;
 
@@ -40,6 +41,13 @@ public class ClubController {
     @Operation(summary = "동호회 주제에 따라 조회", description = "동호회 주제로 필터링하여 조회한다.")
     public SuccessResponse<List<ClubGetResponseDTO>> getSubjectClubs(@PathVariable String subjectTitle) {
         return new SuccessResponse<>(SUCCESS, clubService.getSubjectClubs(subjectTitle));
+    }
+
+    @PatchMapping("/update")
+    @Operation(summary = "동호회 수정", description = "자신이 관리자인 동호회를 수정한다.")
+    public SuccessResponse<ClubGetResponseDTO> updateClub(@RequestHeader("Authorization") String token,
+                                                             @RequestBody ClubUpdateRequestDTO clubUpdateRequestDTO) {
+        return new SuccessResponse<>(SUCCESS, clubService.updateClub(token, clubUpdateRequestDTO));
     }
 
 }

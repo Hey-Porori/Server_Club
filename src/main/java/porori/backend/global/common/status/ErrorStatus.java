@@ -23,7 +23,9 @@ public enum ErrorStatus {
 
     FULL_CLUB_NUMBER(400, "동호회 인원이 모두 찼습니다."),
 
-    INVALID_JWT(401, "유효하지 않은 JWT입니다.");
+    INVALID_JWT(401, "유효하지 않은 JWT입니다."),
+
+    NOT_MANAGE_CLUB(403, "현재 접속한 유저가 관리하는 동호회가 아닙니다.");
 
     private final int statusCode;
     private final String message;

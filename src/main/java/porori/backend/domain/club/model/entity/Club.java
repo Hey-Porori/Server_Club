@@ -49,7 +49,8 @@ public class Club extends BaseEntity {
     private List<Member> members;
 
     @Builder
-    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber, int currentMemberNumber) {
+    protected Club(Long clubId, Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber, int currentMemberNumber) {
+        this.clubId = clubId;
         this.userId = userId;
         this.name = name;
         this.subjectTitle = subjectTitle;
