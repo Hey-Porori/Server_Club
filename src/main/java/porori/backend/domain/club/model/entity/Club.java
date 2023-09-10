@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.member.model.entity.Member;
 import porori.backend.global.common.entity.BaseEntity;
+import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
 import java.util.List;
@@ -42,11 +43,15 @@ public class Club extends BaseEntity {
     @Column(nullable = false)
     private int limitMemberNumber;
 
+    @Column(nullable = false)
+    private int currentMemberNumber;
+
     @OneToMany(mappedBy="club")
     private List<Member> members;
 
     @Builder
-    protected Club(Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber) {
+    protected Club(Long clubId, Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber, int currentMemberNumber) {
+        this.clubId = clubId;
         this.userId = userId;
         this.name = name;
         this.subjectTitle = subjectTitle;
@@ -54,5 +59,14 @@ public class Club extends BaseEntity {
         this.description = description;
         this.location = location;
         this.limitMemberNumber = limitMemberNumber;
+        this.currentMemberNumber = currentMemberNumber;
+    }
+
+    public void increaseCurrentMemberNumber() {
+        this.currentMemberNumber = this.currentMemberNumber + 1;
+    }
+
+    public void changeStatus(BaseStatus status) {
+        this.status = status;
     }
 }

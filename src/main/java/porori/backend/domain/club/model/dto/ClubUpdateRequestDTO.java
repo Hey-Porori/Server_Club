@@ -4,10 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "동호회 생성 Request : 동호회 생성 시 필요한 정보")
+@Schema(description = "동호회 수정 Request : 동호회 수정 시 필요한 정보")
 @NoArgsConstructor
 @Getter
-public class ClubCreateRequestDTO {
+public class ClubUpdateRequestDTO {
+
+    @Schema(description = "동호회 ID", example = "1")
+    private Long clubId;
 
     @Schema(description = "동호회 이름", example = "산타는 할아버지")
     private String name;
