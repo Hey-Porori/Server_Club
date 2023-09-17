@@ -8,6 +8,7 @@ import porori.backend.domain.application.model.dto.ApplicationResponseDTO;
 import porori.backend.domain.application.service.ApplicationService;
 import porori.backend.global.common.dto.response.SuccessResponse;
 
+import static porori.backend.global.common.status.SuccessStatus.ACCEPT_APPLICATION;
 import static porori.backend.global.common.status.SuccessStatus.CREATE_APPLICATION;
 
 @Tag(name = "동호회 가입 신청 및 취소 API")
@@ -23,5 +24,13 @@ public class ApplicationController {
     public SuccessResponse<ApplicationResponseDTO> createApplication(@RequestHeader("Authorization") String token,
                                                                      @RequestParam Long clubId) {
         return new SuccessResponse<>(CREATE_APPLICATION, applicationService.createApplication(token, clubId));
+    }
+
+    @PostMapping("/accept/{clubId}/{userId}")
+    @Operation(summary = "동호회 가입 수락", description = "관리자가 가입 신청한 유저를 수락한다.")
+    public SuccessResponse<ApplicationResponseDTO> acceptApplication(@RequestHeader("Authorization") String token,
+                                                                     @PathVariable Long clubId,
+                                                                     @PathVariable Long userId) {
+        return new SuccessResponse<>(ACCEPT_APPLICATION, applicationService.acceptApplication(token, clubId, userId));
     }
 }

@@ -36,4 +36,8 @@ public class Application extends BaseEntity {
         this.userId = userId;
         this.applicationStatus = applicationStatus;
     }
+
+    public void changeStatus(ApplicationStatus status) {
+        this.applicationStatus = status;
+    }
 }
