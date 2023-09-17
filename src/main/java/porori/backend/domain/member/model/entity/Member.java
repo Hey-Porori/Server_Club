@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.global.common.entity.BaseEntity;
+import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
 
@@ -33,5 +34,9 @@ public class Member extends BaseEntity {
         this.userId = userId;
         this.club = club;
         this.role = role;
+    }
+
+    public void changeStatus(BaseStatus status) {
+        this.status = status;
     }
 }

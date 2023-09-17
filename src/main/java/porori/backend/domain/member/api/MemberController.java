@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import porori.backend.domain.member.model.dto.MemberResponseDTO;
+import porori.backend.domain.member.model.dto.MemberStatusResponseDTO;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.global.common.dto.response.SuccessResponse;
 
@@ -25,6 +26,14 @@ public class MemberController {
     public SuccessResponse<List<MemberResponseDTO>> getMemberList(@RequestHeader("Authorization") String token,
                                                                   @PathVariable Long clubId) {
         return new SuccessResponse<>(SUCCESS, memberService.getMemberList(token, clubId));
+    }
+
+    @PostMapping("/kick-out/{clubId}/{userId}")
+    @Operation(summary = "동호회 회원 강제 탈퇴", description = "관리자가 회원을 강제 탈퇴한다.")
+    public SuccessResponse<MemberStatusResponseDTO> kickOutMember(@RequestHeader("Authorization") String token,
+                                                                  @PathVariable Long clubId,
+                                                                  @PathVariable Long userId) {
+        return new SuccessResponse<>(SUCCESS, memberService.kickOutMember(token, clubId, userId));
     }
 
 }

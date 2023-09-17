@@ -6,15 +6,19 @@ import porori.backend.domain.application.exception.ApplicationException;
 import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
+import porori.backend.domain.member.exception.MemberException;
 import porori.backend.domain.member.model.dto.MemberResponseDTO;
+import porori.backend.domain.member.model.dto.MemberStatusResponseDTO;
 import porori.backend.domain.member.model.entity.Member;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.user.service.UserService;
+import porori.backend.global.common.status.BaseStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static porori.backend.global.common.status.BaseStatus.ACTIVE;
 import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
@@ -50,7 +54,7 @@ public class MemberService {
         Long managerId = userService.getUserId(token);
         Club club = verifyClubManager(clubId, managerId);
 
-        List<Member> members = memberRepository.findByClub(club);
+        List<Member> members = memberRepository.findByClubAndStatus(club, ACTIVE);
         return members.stream()
                 .map(MemberResponseDTO::from)
                 .collect(Collectors.toList());
@@ -60,5 +64,16 @@ public class MemberService {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
             throw new ClubException(NOT_MANAGE_CLUB);
         return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+    }
+
+    public MemberStatusResponseDTO kickOutMember(String token, Long clubId, Long userId) {
+        Long managerId = userService.getUserId(token);
+        Club club = verifyClubManager(clubId, managerId);
+
+        Member member = memberRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
+
+        member.changeStatus(BaseStatus.INACTIVE);
+        memberRepository.save(member);
+        return MemberStatusResponseDTO.from(member);
     }
 }
