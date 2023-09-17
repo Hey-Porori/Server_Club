@@ -30,7 +30,7 @@ public class ApplicationController {
     public SuccessResponse<ApplicationResponseDTO> acceptApplication(@RequestHeader("Authorization") String token,
                                                                      @PathVariable Long clubId,
                                                                      @PathVariable Long userId) {
-        return new SuccessResponse<>(ACCEPT_APPLICATION, applicationService.acceptApplication(token, clubId, userId));
+        return new SuccessResponse<>(SUCCESS, applicationService.acceptApplication(token, clubId, userId));
     }
 
     @PostMapping("/reject/{clubId}/{userId}")
@@ -38,6 +38,6 @@ public class ApplicationController {
     public SuccessResponse<ApplicationResponseDTO> rejectApplication(@RequestHeader("Authorization") String token,
                                                                      @PathVariable Long clubId,
                                                                      @PathVariable Long userId) {
-        return new SuccessResponse<>(REJECT_APPLICATION, applicationService.rejectApplication(token, clubId, userId));
+        return new SuccessResponse<>(SUCCESS, applicationService.rejectApplication(token, clubId, userId));
     }
 }
