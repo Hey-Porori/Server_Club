@@ -15,8 +15,10 @@ import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 
-import static porori.backend.domain.application.model.entity.ApplicationStatus.COMPLETED;
-import static porori.backend.domain.application.model.entity.ApplicationStatus.REJECTED;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static porori.backend.domain.application.model.entity.ApplicationStatus.*;
 import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
@@ -85,6 +87,16 @@ public class ApplicationService {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
             throw new ClubException(NOT_MANAGE_CLUB);
         return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+    }
+
+    public List<ApplicationResponseDTO> getApplicationList(String token, Long clubId) {
+        Long userId = userService.getUserId(token);
+        Club club = verifyClubManager(clubId, userId);
+
+        List<Application> applications = applicationRepository.findByClubAndApplicationStatus(club, APPLIED);
+        return applications.stream()
+                .map(ApplicationResponseDTO::from)
+                .collect(Collectors.toList());
     }
 
 }
