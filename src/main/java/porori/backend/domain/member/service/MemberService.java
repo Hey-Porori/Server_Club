@@ -2,6 +2,7 @@ package porori.backend.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import porori.backend.domain.application.exception.ApplicationException;
 import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
@@ -14,8 +15,7 @@ import porori.backend.domain.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static porori.backend.global.common.status.ErrorStatus.INVALID_CLUB;
-import static porori.backend.global.common.status.ErrorStatus.NOT_MANAGE_CLUB;
+import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,7 @@ public class MemberService {
 
     public void addMember(Club club, Long userId, Role role) {
         Club findClub = clubRepository.findById(club.getClubId()).orElseThrow(() -> new ClubException(INVALID_CLUB));
+        verifyClubLimitMember(findClub);
         findClub.increaseCurrentMemberNumber();
         clubRepository.save(findClub);
 
@@ -38,6 +39,11 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+    }
+
+    private void verifyClubLimitMember(Club club) {
+        if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
+            throw new ApplicationException(FULL_CLUB_NUMBER);
     }
 
     public List<MemberResponseDTO> getMemberList(String token, Long clubId) {
