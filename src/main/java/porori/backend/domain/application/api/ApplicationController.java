@@ -18,10 +18,10 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/{clubId}")
     @Operation(summary = "동호회 가입 신청", description = "유저가 동호회에 가입 신청을 한다.")
     public SuccessResponse<ApplicationResponseDTO> createApplication(@RequestHeader("Authorization") String token,
-                                                                     @RequestParam Long clubId) {
+                                                                     @PathVariable Long clubId) {
         return new SuccessResponse<>(CREATE_APPLICATION, applicationService.createApplication(token, clubId));
     }
 
