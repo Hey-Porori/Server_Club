@@ -10,7 +10,7 @@ import porori.backend.domain.application.model.entity.ApplicationStatus;
 @Schema(description = "동호회 가입 신청 Response : 동호회 가입 신청 후 얻을 수 있는 정보")
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
-public class ApplicationCreateResponseDTO {
+public class ApplicationResponseDTO {
 
     @Schema(description = "유저 ID", example = "1")
     private Long userId;
@@ -21,8 +21,8 @@ public class ApplicationCreateResponseDTO {
     @Schema(description = "지원 상태", example = "APPLIED")
     private ApplicationStatus applicationStatus;
 
-    public static ApplicationCreateResponseDTO from(Application application) {
-        return ApplicationCreateResponseDTO.builder()
+    public static ApplicationResponseDTO from(Application application) {
+        return ApplicationResponseDTO.builder()
                 .userId(application.getUserId())
                 .clubId(application.getClub().getClubId())
                 .applicationStatus(application.getApplicationStatus())
