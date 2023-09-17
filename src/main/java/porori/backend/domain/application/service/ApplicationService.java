@@ -10,9 +10,9 @@ import porori.backend.domain.application.repository.ApplicationRepository;
 import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
-import porori.backend.domain.member.model.entity.Member;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.repository.MemberRepository;
+import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 
 import static porori.backend.domain.application.model.entity.ApplicationStatus.COMPLETED;
@@ -23,6 +23,7 @@ import static porori.backend.global.common.status.ErrorStatus.*;
 public class ApplicationService {
 
     private final UserService userService;
+    private final MemberService memberService;
 
     private final ApplicationRepository applicationRepository;
     private final ClubRepository clubRepository;
@@ -66,12 +67,7 @@ public class ApplicationService {
         application.changeStatus(COMPLETED);
         applicationRepository.save(application);
 
-        Member member = Member.builder()
-                .club(club)
-                .userId(userId)
-                .role(Role.MEMBER)
-                .build();
-        memberRepository.save(member);
+        memberService.addMember(club, userId, Role.MEMBER);
 
         return ApplicationResponseDTO.from(application);
     }
