@@ -59,37 +59,32 @@ public class ApplicationService {
 
     public ApplicationResponseDTO acceptApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+        Club club = verifyClubManager(clubId, managerId);
 
-        verifyClubManager(clubId, managerId);
-
-        Application application = applicationRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new ApplicationException(NOT_EXIST_APPLICATION));
-
-        application.changeStatus(COMPLETED);
-        applicationRepository.save(application);
-
+        Application application = changeApplicationStatus(club, userId, COMPLETED);
         memberService.addMember(club, userId, Role.MEMBER);
-
         return ApplicationResponseDTO.from(application);
     }
 
     public ApplicationResponseDTO rejectApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+        Club club = verifyClubManager(clubId, managerId);
 
-        verifyClubManager(clubId, managerId);
-
-        Application application = applicationRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new ApplicationException(NOT_EXIST_APPLICATION));
-
-        application.changeStatus(REJECTED);
-        applicationRepository.save(application);
-
+        Application application = changeApplicationStatus(club, userId, REJECTED);
         return ApplicationResponseDTO.from(application);
     }
 
-    private void verifyClubManager(Long clubId, Long userId) {
+    private Application changeApplicationStatus(Club club, Long userId, ApplicationStatus status) {
+        Application application = applicationRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new ApplicationException(NOT_EXIST_APPLICATION));
+        application.changeStatus(status);
+        applicationRepository.save(application);
+        return application;
+    }
+
+    private Club verifyClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
             throw new ClubException(NOT_MANAGE_CLUB);
+        return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
     }
 
 }
