@@ -16,6 +16,7 @@ import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 
 import static porori.backend.domain.application.model.entity.ApplicationStatus.COMPLETED;
+import static porori.backend.domain.application.model.entity.ApplicationStatus.REJECTED;
 import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
@@ -68,6 +69,20 @@ public class ApplicationService {
         applicationRepository.save(application);
 
         memberService.addMember(club, userId, Role.MEMBER);
+
+        return ApplicationResponseDTO.from(application);
+    }
+
+    public ApplicationResponseDTO rejectApplication(String token, Long clubId, Long userId) {
+        Long managerId = userService.getUserId(token);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+
+        verifyClubManager(clubId, managerId);
+
+        Application application = applicationRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new ApplicationException(NOT_EXIST_APPLICATION));
+
+        application.changeStatus(REJECTED);
+        applicationRepository.save(application);
 
         return ApplicationResponseDTO.from(application);
     }
