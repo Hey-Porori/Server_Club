@@ -72,6 +72,9 @@ public class MemberService {
 
         member.changeStatus(BaseStatus.INACTIVE);
         memberRepository.save(member);
+
+        club.decreaseCurrentMemberNumber();
+        clubRepository.save(club);
         return MemberStatusResponseDTO.from(member);
     }
 }
