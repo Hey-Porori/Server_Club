@@ -28,7 +28,8 @@ public enum ErrorStatus {
     NOT_MANAGE_CLUB(403, "현재 접속한 유저가 관리하는 동호회가 아닙니다."),
 
     NOT_EXIST_APPLICATION(404, "신청 내역이 존재하지 않습니다."),
-    NOT_EXIST_MEMBER(404, "동호회 회원이 아닙니다.");
+    NOT_EXIST_MEMBER(404, "동호회 회원이 아닙니다."),
+    NOT_EXIST_USER(404, "유저 정보가 존재하지 않습니다.");
 
     private final int statusCode;
     private final String message;
