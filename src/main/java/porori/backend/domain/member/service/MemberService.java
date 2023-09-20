@@ -55,9 +55,7 @@ public class MemberService {
         Club club = verifyClubManager(clubId, managerId);
 
         List<Member> members = memberRepository.findByClubAndStatus(club, ACTIVE);
-        return members.stream()
-                .map(MemberResponseDTO::from)
-                .collect(Collectors.toList());
+        return userService.getMemberResponseDTO(members.stream().map(Member::getUserId).collect(Collectors.toList()));
     }
 
     private Club verifyClubManager(Long clubId, Long userId) {
