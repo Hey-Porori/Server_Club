@@ -30,7 +30,6 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ClubRepository clubRepository;
-    private final MemberRepository memberRepository;
 
     public ApplicationResponseDTO createApplication(String token, Long clubId) {
         Long userId = userService.getUserId(token);
@@ -55,7 +54,7 @@ public class ApplicationService {
     }
 
     private void verifyClubLimitMember(Club club) {
-        if (memberRepository.findByClub(club).size() >= club.getLimitMemberNumber())
+        if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
             throw new ApplicationException(FULL_CLUB_NUMBER);
     }
 
