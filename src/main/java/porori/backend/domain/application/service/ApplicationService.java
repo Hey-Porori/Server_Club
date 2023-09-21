@@ -11,7 +11,6 @@ import porori.backend.domain.club.exception.ClubException;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
-import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 
@@ -84,7 +83,7 @@ public class ApplicationService {
 
     private Club verifyClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_MANAGE_CLUB);
+            throw new ClubException(NOT_CLUB_MANAGER);
         return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
     }
 

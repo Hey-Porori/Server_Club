@@ -60,7 +60,7 @@ public class MemberService {
 
     private Club verifyClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_MANAGE_CLUB);
+            throw new ClubException(NOT_CLUB_MANAGER);
         return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
     }
 

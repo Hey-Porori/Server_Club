@@ -141,6 +141,6 @@ public class ClubService {
 
     private void verifyClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_MANAGE_CLUB);
+            throw new ClubException(NOT_CLUB_MANAGER);
     }
 }
