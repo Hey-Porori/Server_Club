@@ -62,8 +62,8 @@ public class ApplicationService {
         Long managerId = userService.getUserId(token);
         Club club = verifyClubManager(clubId, managerId);
 
-        Application application = changeApplicationStatus(club, userId, COMPLETED);
         memberService.addMember(club, userId, Role.MEMBER);
+        Application application = changeApplicationStatus(club, userId, COMPLETED);
         return ApplicationResponseDTO.from(application);
     }
 
