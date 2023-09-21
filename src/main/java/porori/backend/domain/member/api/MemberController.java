@@ -36,4 +36,11 @@ public class MemberController {
         return new SuccessResponse<>(SUCCESS, memberService.kickOutMember(token, clubId, userId));
     }
 
+    @PostMapping("/quit/{clubId}")
+    @Operation(summary = "동호회 회원 탈퇴", description = "회원이 동호회를 탈퇴한다.")
+    public SuccessResponse<MemberStatusResponseDTO> quitMember(@RequestHeader("Authorization") String token,
+                                                               @PathVariable Long clubId) {
+        return new SuccessResponse<>(SUCCESS, memberService.quitMember(token, clubId));
+    }
+
 }
