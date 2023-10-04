@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static porori.backend.global.common.status.BaseStatus.ACTIVE;
+import static porori.backend.global.common.status.BaseStatus.INACTIVE;
 import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
@@ -60,7 +61,7 @@ public class MemberService {
 
     private Club verifyClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_MANAGE_CLUB);
+            throw new ClubException(NOT_CLUB_MANAGER);
         return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
     }
 
@@ -72,6 +73,29 @@ public class MemberService {
 
         member.changeStatus(BaseStatus.INACTIVE);
         memberRepository.save(member);
+
+        club.decreaseCurrentMemberNumber();
+        clubRepository.save(club);
         return MemberStatusResponseDTO.from(member);
+    }
+
+    public MemberStatusResponseDTO quitMember(String token, Long clubId) {
+        Long userId = userService.getUserId(token);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
+
+        Member member = memberRepository.findByClubAndUserId(club, userId).orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
+        verifyQuitManager(member);
+
+        member.changeStatus(INACTIVE);
+        memberRepository.save(member);
+
+        club.decreaseCurrentMemberNumber();
+        clubRepository.save(club);
+        return MemberStatusResponseDTO.from(member);
+    }
+
+    private void verifyQuitManager(Member member) {
+        if (member.getRole().equals(Role.MANAGER))
+            throw new ClubException(MANAGER_CANT_QUIT);
     }
 }

@@ -46,9 +46,9 @@ public class ClubController {
         return new SuccessResponse<>(SUCCESS, clubService.getSubjectClubs(subjectTitle));
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/detail/{clubId}")
     @Operation(summary = "동호회 정보 조회", description = "동호회 ID로 동호회를 조회한다.")
-    public SuccessResponse<ClubGetResponseDTO> getClub(@RequestParam Long clubId) {
+    public SuccessResponse<ClubGetResponseDTO> getClub(@PathVariable Long clubId) {
         return new SuccessResponse<>(SUCCESS, clubService.getClub(clubId));
     }
 
@@ -59,10 +59,10 @@ public class ClubController {
         return new SuccessResponse<>(SUCCESS, clubService.updateClub(token, clubUpdateRequestDTO));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{clubId}")
     @Operation(summary = "동호회 삭제", description = "자신이 관리자인 동호회를 삭제한다.")
     public SuccessResponse<ClubDeleteResponseDTO> deleteClub(@RequestHeader("Authorization") String token,
-                                                             @RequestParam Long clubId) {
+                                                             @PathVariable Long clubId) {
         return new SuccessResponse<>(SUCCESS, clubService.deleteClub(token, clubId));
     }
 

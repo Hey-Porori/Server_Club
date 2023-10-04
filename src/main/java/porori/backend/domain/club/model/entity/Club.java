@@ -66,6 +66,10 @@ public class Club extends BaseEntity {
         this.currentMemberNumber = this.currentMemberNumber + 1;
     }
 
+    public void decreaseCurrentMemberNumber() {
+        this.currentMemberNumber = this.currentMemberNumber - 1;
+    }
+
     public void changeStatus(BaseStatus status) {
         this.status = status;
     }
