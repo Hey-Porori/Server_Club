@@ -20,7 +20,7 @@ public class OpenApiConfig {
 
         Server devServer = new Server();
         devServer.setDescription("dev");
-        devServer.setUrl(clubUrl);
+        devServer.setUrl("http://" + clubUrl);
 
         Server localServer = new Server();
         localServer.setDescription("local");
