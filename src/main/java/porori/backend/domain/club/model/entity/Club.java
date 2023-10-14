@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.member.model.entity.Member;
+import porori.backend.domain.post.model.entity.Post;
 import porori.backend.global.common.entity.BaseEntity;
 import porori.backend.global.common.status.BaseStatus;
 
@@ -48,6 +49,9 @@ public class Club extends BaseEntity {
 
     @OneToMany(mappedBy="club")
     private List<Member> members;
+
+    @OneToMany(mappedBy = "club")
+    private List<Post> posts;
 
     @Builder
     protected Club(Long clubId, Long userId, String name, SubjectTitle subjectTitle, SubjectDetail subjectDetail, String description, String location, int limitMemberNumber, int currentMemberNumber) {
