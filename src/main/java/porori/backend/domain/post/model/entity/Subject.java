@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Subject {
 
+    DEFAULT("일반"),
     POPULAR("인기글"),
     TOGETHER("같이가요"),
     QUESTION("질문"),
