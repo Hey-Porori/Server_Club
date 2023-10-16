@@ -9,12 +9,16 @@ import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.post.exception.PostException;
 import porori.backend.domain.post.model.dto.PostCreateRequestDTO;
 import porori.backend.domain.post.model.dto.PostResponseDTO;
+import porori.backend.domain.post.model.dto.PostSubjectResponseDTO;
 import porori.backend.domain.post.model.entity.Post;
+import porori.backend.domain.post.model.entity.Subject;
 import porori.backend.domain.post.repository.PostRepository;
 import porori.backend.domain.user.service.UserService;
 import porori.backend.global.common.status.ErrorStatus;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static porori.backend.domain.post.model.entity.Subject.valueOfSubject;
 
@@ -50,5 +54,12 @@ public class PostService {
     private void verifyClubMember(Club club, Long userId) {
         if (!memberRepository.existsByClubAndUserId(club, userId))
             throw new PostException(ErrorStatus.NOT_EXIST_MEMBER);
+    }
+
+    public List<PostSubjectResponseDTO> getPostSubjects() {
+        return Arrays.stream(Subject.values())
+                .filter(subject -> !(subject.getSubject().equals("")))
+                .map(PostSubjectResponseDTO::from)
+                .collect(Collectors.toList());
     }
 }
