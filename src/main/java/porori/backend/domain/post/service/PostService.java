@@ -14,8 +14,6 @@ import porori.backend.domain.post.model.entity.Post;
 import porori.backend.domain.post.model.entity.Subject;
 import porori.backend.domain.post.repository.PostRepository;
 import porori.backend.domain.user.service.UserService;
-import porori.backend.global.common.status.BaseStatus;
-import porori.backend.global.common.status.ErrorStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +21,8 @@ import java.util.stream.Collectors;
 
 import static porori.backend.domain.post.model.entity.Subject.EMPTY;
 import static porori.backend.domain.post.model.entity.Subject.valueOfSubject;
-import static porori.backend.global.common.status.ErrorStatus.INVALID_POST_SUBJECT;
+import static porori.backend.global.common.status.BaseStatus.ACTIVE;
+import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class PostService {
     public PostResponseDTO createPost(String token, PostCreateRequestDTO postCreateRequestDTO) {
         Long userId = userService.getUserId(token);
         Long clubId = postCreateRequestDTO.getClubId();
-        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(ErrorStatus.INVALID_CLUB));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(INVALID_CLUB));
         verifyClubMember(club, userId);
 
         Post post = Post.builder()
@@ -56,7 +55,7 @@ public class PostService {
 
     private void verifyClubMember(Club club, Long userId) {
         if (!memberRepository.existsByClubAndUserId(club, userId))
-            throw new PostException(ErrorStatus.NOT_EXIST_MEMBER);
+            throw new PostException(NOT_EXIST_MEMBER);
     }
 
     public List<PostSubjectResponseDTO> getPostSubjects() {
@@ -68,10 +67,10 @@ public class PostService {
 
     public List<PostResponseDTO> getAllPosts(String token, Long clubId) {
         Long userId = userService.getUserId(token);
-        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(ErrorStatus.INVALID_CLUB));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(INVALID_CLUB));
         verifyClubMember(club, userId);
 
-        List<Post> posts = postRepository.findByClubAndStatus(club, BaseStatus.ACTIVE);
+        List<Post> posts = postRepository.findByClubAndStatus(club, ACTIVE);
 
         return posts.stream()
                 .map(post -> {
@@ -83,11 +82,11 @@ public class PostService {
 
     public List<PostResponseDTO> getSubjectPosts(String token, Long clubId, String subject) {
         Long userId = userService.getUserId(token);
-        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(ErrorStatus.INVALID_CLUB));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(INVALID_CLUB));
         verifyClubMember(club, userId);
         verifySubject(subject);
 
-        List<Post> posts = postRepository.findByClubAndSubjectAndStatus(club, valueOfSubject(subject), BaseStatus.ACTIVE);
+        List<Post> posts = postRepository.findByClubAndSubjectAndStatus(club, valueOfSubject(subject), ACTIVE);
 
         return posts.stream()
                 .map(post -> {
