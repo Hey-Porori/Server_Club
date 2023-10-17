@@ -42,4 +42,12 @@ public class PostController {
                                                               @PathVariable Long clubId) {
         return new SuccessResponse<>(SUCCESS, postService.getAllPosts(token, clubId));
     }
+
+    @GetMapping("/subject/{clubId}/{subject}")
+    @Operation(summary = "글 주제에 따라 조회", description = "글 주제로 필터링하여 조회한다.")
+    public SuccessResponse<List<PostResponseDTO>> getSubjectPosts(@RequestHeader("Authorization") String token,
+                                                                  @PathVariable Long clubId,
+                                                                  @PathVariable String subject) {
+        return new SuccessResponse<>(SUCCESS, postService.getSubjectPosts(token, clubId, subject));
+    }
 }

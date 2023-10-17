@@ -21,7 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static porori.backend.domain.post.model.entity.Subject.EMPTY;
 import static porori.backend.domain.post.model.entity.Subject.valueOfSubject;
+import static porori.backend.global.common.status.ErrorStatus.INVALID_POST_SUBJECT;
 
 @Service
 @RequiredArgsConstructor
@@ -77,5 +79,26 @@ public class PostService {
                     return PostResponseDTO.of(post, memberResponseDTO);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDTO> getSubjectPosts(String token, Long clubId, String subject) {
+        Long userId = userService.getUserId(token);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(ErrorStatus.INVALID_CLUB));
+        verifyClubMember(club, userId);
+        verifySubject(subject);
+
+        List<Post> posts = postRepository.findByClubAndSubjectAndStatus(club, valueOfSubject(subject), BaseStatus.ACTIVE);
+
+        return posts.stream()
+                .map(post -> {
+                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
+                    return PostResponseDTO.of(post, memberResponseDTO);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private void verifySubject(String subject) {
+        if (valueOfSubject(subject).equals(EMPTY))
+            throw new PostException(INVALID_POST_SUBJECT);
     }
 }
