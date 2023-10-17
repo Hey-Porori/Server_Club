@@ -17,6 +17,7 @@ public enum ErrorStatus {
      */
 
     INVALID_CLUB(400, "유효하지 않은 동호회 ID입니다."),
+    INVALID_POST(400, "유효하지 않은 글 ID입니다."),
     INVALID_SUBJECT_TITLE(400, "유효하지 않은 동호회 주제입니다."),
     INVALID_POST_SUBJECT(400, "유효하지 않은 글 주제입니다."),
     EXIST_APPLICATION(400, "이미 가입 신청한 동호회입니다."),
