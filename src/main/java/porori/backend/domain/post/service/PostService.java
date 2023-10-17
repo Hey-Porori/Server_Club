@@ -14,6 +14,7 @@ import porori.backend.domain.post.model.entity.Post;
 import porori.backend.domain.post.model.entity.Subject;
 import porori.backend.domain.post.repository.PostRepository;
 import porori.backend.domain.user.service.UserService;
+import porori.backend.global.common.status.BaseStatus;
 import porori.backend.global.common.status.ErrorStatus;
 
 import java.util.Arrays;
@@ -60,6 +61,21 @@ public class PostService {
         return Arrays.stream(Subject.values())
                 .filter(subject -> !(subject.getSubject().equals("")))
                 .map(PostSubjectResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDTO> getAllPosts(String token, Long clubId) {
+        Long userId = userService.getUserId(token);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(ErrorStatus.INVALID_CLUB));
+        verifyClubMember(club, userId);
+
+        List<Post> posts = postRepository.findByClubAndStatus(club, BaseStatus.ACTIVE);
+
+        return posts.stream()
+                .map(post -> {
+                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
+                    return PostResponseDTO.of(post, memberResponseDTO);
+                })
                 .collect(Collectors.toList());
     }
 }

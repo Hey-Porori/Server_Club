@@ -35,4 +35,11 @@ public class PostController {
     public SuccessResponse<List<PostSubjectResponseDTO>> getPostSubjects() {
         return new SuccessResponse<>(SUCCESS, postService.getPostSubjects());
     }
+
+    @GetMapping("/all/{clubId}")
+    @Operation(summary = "모든 글 조회", description = "동호회의 모든 글을 조회한다.")
+    public SuccessResponse<List<PostResponseDTO>> getAllPosts(@RequestHeader("Authorization") String token,
+                                                              @PathVariable Long clubId) {
+        return new SuccessResponse<>(SUCCESS, postService.getAllPosts(token, clubId));
+    }
 }
