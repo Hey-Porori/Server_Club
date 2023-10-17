@@ -100,4 +100,21 @@ public class PostService {
         if (valueOfSubject(subject).equals(EMPTY))
             throw new PostException(INVALID_POST_SUBJECT);
     }
+
+    public PostResponseDTO getPost(String token, Long clubId, Long postId) {
+        Long userId = userService.getUserId(token);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new PostException(INVALID_CLUB));
+        verifyClubMember(club, userId);
+        verifyClubPost(postId, club);
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(INVALID_POST));
+        MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
+
+        return PostResponseDTO.of(post, memberResponseDTO);
+    }
+
+    private void verifyClubPost(Long postId, Club club) {
+        if (!postRepository.existsByPostIdAndClub(postId, club))
+            throw new PostException(NOT_CLUB_POST);
+    }
 }

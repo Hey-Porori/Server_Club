@@ -50,4 +50,12 @@ public class PostController {
                                                                   @PathVariable String subject) {
         return new SuccessResponse<>(SUCCESS, postService.getSubjectPosts(token, clubId, subject));
     }
+
+    @GetMapping("/detail/{clubId}/{postId}")
+    @Operation(summary = "글 정보 조회", description = "글 ID로 글을 조회한다.")
+    public SuccessResponse<PostResponseDTO> getPost(@RequestHeader("Authorization") String token,
+                                                    @PathVariable Long clubId,
+                                                    @PathVariable Long postId) {
+        return new SuccessResponse<>(SUCCESS, postService.getPost(token, clubId, postId));
+    }
 }
