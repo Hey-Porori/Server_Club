@@ -18,6 +18,9 @@ public class PostResponseDTO {
     @Schema(description = "유저 닉네임", example = "세종대왕")
     private String nickName;
 
+    @Schema(description = "유저 프로필 사진 url", example = "picture.png")
+    private String imageUrl;
+
     @Schema(description = "글 제목", example = "등산 가실 분")
     private String title;
 
@@ -34,6 +37,7 @@ public class PostResponseDTO {
         return PostResponseDTO.builder()
                 .postId(post.getPostId())
                 .nickName(memberResponseDTO.getNickName())
+                .imageUrl(memberResponseDTO.getImageUrl())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .isImportant(post.isImportant())
