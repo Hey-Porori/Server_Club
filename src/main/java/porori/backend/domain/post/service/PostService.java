@@ -8,6 +8,7 @@ import porori.backend.domain.member.model.dto.MemberResponseDTO;
 import porori.backend.domain.member.repository.MemberRepository;
 import porori.backend.domain.post.exception.PostException;
 import porori.backend.domain.post.model.dto.PostCreateRequestDTO;
+import porori.backend.domain.post.model.dto.PostDeleteResponseDTO;
 import porori.backend.domain.post.model.dto.PostResponseDTO;
 import porori.backend.domain.post.model.dto.PostSubjectResponseDTO;
 import porori.backend.domain.post.model.entity.Post;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import static porori.backend.domain.post.model.entity.Subject.EMPTY;
 import static porori.backend.domain.post.model.entity.Subject.valueOfSubject;
 import static porori.backend.global.common.status.BaseStatus.ACTIVE;
+import static porori.backend.global.common.status.BaseStatus.INACTIVE;
 import static porori.backend.global.common.status.ErrorStatus.*;
 
 @Service
@@ -116,5 +118,20 @@ public class PostService {
     private void verifyClubPost(Long postId, Club club) {
         if (!postRepository.existsByPostIdAndClub(postId, club))
             throw new PostException(NOT_CLUB_POST);
+    }
+
+    public PostDeleteResponseDTO deletePost(String token, Long postId) {
+        Long userId = userService.getUserId(token);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(INVALID_POST));
+        verifyUserPost(postId, userId);
+
+        post.changeStatus(INACTIVE);
+        postRepository.save(post);
+        return PostDeleteResponseDTO.from(post);
+    }
+
+    private void verifyUserPost(Long postId, Long userId) {
+        if (!postRepository.existsByPostIdAndUserId(postId, userId))
+            throw new PostException(NOT_USER_POST);
     }
 }
