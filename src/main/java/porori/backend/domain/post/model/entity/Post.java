@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.club.model.entity.Club;
 import porori.backend.global.common.entity.BaseEntity;
+import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
 
@@ -47,6 +48,10 @@ public class Post extends BaseEntity {
         this.content = content;
         this.isImportant = isImportant;
         this.subject = subject;
+    }
+
+    public void changeStatus(BaseStatus status) {
+        this.status = status;
     }
 
 }
