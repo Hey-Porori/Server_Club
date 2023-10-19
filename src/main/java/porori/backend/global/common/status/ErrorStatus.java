@@ -28,6 +28,7 @@ public enum ErrorStatus {
     NOT_CLUB_MANAGER(403, "현재 접속한 유저가 관리하는 동호회가 아닙니다."),
     MANAGER_CANT_QUIT(403, "동호회 관리자는 동호회를 탈퇴할 수 없습니다."),
     NOT_CLUB_POST(403, "해당 동호회의 글의 아닙니다."),
+    NOT_USER_POST(403, "현재 접속한 유저가 작성한 글이 아닙니다."),
 
     NOT_EXIST_APPLICATION(404, "신청 내역이 존재하지 않습니다."),
     NOT_EXIST_MEMBER(404, "동호회 회원이 아닙니다."),
