@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import porori.backend.domain.post.model.dto.PostCreateRequestDTO;
+import porori.backend.domain.post.model.dto.PostDeleteResponseDTO;
 import porori.backend.domain.post.model.dto.PostResponseDTO;
 import porori.backend.domain.post.model.dto.PostSubjectResponseDTO;
 import porori.backend.domain.post.service.PostService;
@@ -57,5 +58,12 @@ public class PostController {
                                                     @PathVariable Long clubId,
                                                     @PathVariable Long postId) {
         return new SuccessResponse<>(SUCCESS, postService.getPost(token, clubId, postId));
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    @Operation(summary = "글 삭제", description = "자신이 작성한 글을 삭제한다.")
+    public SuccessResponse<PostDeleteResponseDTO> deletePost(@RequestHeader("Authorization") String token,
+                                                             @PathVariable Long postId) {
+        return new SuccessResponse<>(SUCCESS, postService.deletePost(token, postId));
     }
 }

@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByClubAndSubjectAndStatus(Club club, Subject subject,BaseStatus status);
 
     boolean existsByPostIdAndClub(Long postId, Club club);
+
+    boolean existsByPostIdAndUserId(Long postId, Long userId);
 }

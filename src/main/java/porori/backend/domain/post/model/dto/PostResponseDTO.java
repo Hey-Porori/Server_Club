@@ -21,6 +21,9 @@ public class PostResponseDTO {
     @Schema(description = "유저 프로필 사진 url", example = "picture.png")
     private String imageUrl;
 
+    @Schema(description = "해당 글 작성 여부", example = "true")
+    private boolean isWriter;
+
     @Schema(description = "글 제목", example = "등산 가실 분")
     private String title;
 
@@ -33,11 +36,12 @@ public class PostResponseDTO {
     @Schema(description = "글 주제", example = "같이가요")
     private String subject;
 
-    public static PostResponseDTO of(Post post, MemberResponseDTO memberResponseDTO) {
+    public static PostResponseDTO of(Post post, MemberResponseDTO memberResponseDTO, boolean isWriter) {
         return PostResponseDTO.builder()
                 .postId(post.getPostId())
                 .nickName(memberResponseDTO.getNickName())
                 .imageUrl(memberResponseDTO.getImageUrl())
+                .isWriter(isWriter)
                 .title(post.getTitle())
                 .content(post.getContent())
                 .isImportant(post.isImportant())
