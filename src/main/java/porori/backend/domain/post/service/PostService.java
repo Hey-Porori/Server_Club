@@ -52,7 +52,7 @@ public class PostService {
 
         postRepository.save(post);
         MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(userId)).get(0);
-        return PostResponseDTO.of(post, memberResponseDTO);
+        return PostResponseDTO.of(post, memberResponseDTO, true);
     }
 
     private void verifyClubMember(Club club, Long userId) {
@@ -76,8 +76,10 @@ public class PostService {
 
         return posts.stream()
                 .map(post -> {
-                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
-                    return PostResponseDTO.of(post, memberResponseDTO);
+                    Long writerId = post.getUserId();
+                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(writerId)).get(0);
+                    boolean isWriter = writerId.equals(userId);
+                    return PostResponseDTO.of(post, memberResponseDTO, isWriter);
                 })
                 .collect(Collectors.toList());
     }
@@ -92,8 +94,10 @@ public class PostService {
 
         return posts.stream()
                 .map(post -> {
-                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
-                    return PostResponseDTO.of(post, memberResponseDTO);
+                    Long writerId = post.getUserId();
+                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(writerId)).get(0);
+                    boolean isWriter = writerId.equals(userId);
+                    return PostResponseDTO.of(post, memberResponseDTO, isWriter);
                 })
                 .collect(Collectors.toList());
     }
@@ -110,9 +114,11 @@ public class PostService {
         verifyClubPost(postId, club);
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(INVALID_POST));
-        MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(post.getUserId())).get(0);
+        Long writerId = post.getUserId();
+        MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(writerId)).get(0);
+        boolean isWriter = writerId.equals(userId);
 
-        return PostResponseDTO.of(post, memberResponseDTO);
+        return PostResponseDTO.of(post, memberResponseDTO, isWriter);
     }
 
     private void verifyClubPost(Long postId, Club club) {
