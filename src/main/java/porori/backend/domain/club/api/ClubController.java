@@ -1,6 +1,7 @@
 package porori.backend.domain.club.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ClubController {
 
     @PostMapping("/create")
     @Operation(summary = "동호회 생성", description = "유저가 동호회를 생성한다.")
-    public SuccessResponse<ClubCreateResponseDTO> createClub(@RequestHeader("Authorization") String token,
+    public SuccessResponse<ClubCreateResponseDTO> createClub(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                                             @RequestBody ClubCreateRequestDTO clubCreateRequestDTO) {
         return new SuccessResponse<>(CREATE_CLUB, clubService.createClub(token, clubCreateRequestDTO));
     }
@@ -54,14 +55,14 @@ public class ClubController {
 
     @PatchMapping("/update")
     @Operation(summary = "동호회 수정", description = "자신이 관리자인 동호회를 수정한다.")
-    public SuccessResponse<ClubGetResponseDTO> updateClub(@RequestHeader("Authorization") String token,
+    public SuccessResponse<ClubGetResponseDTO> updateClub(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                                              @RequestBody ClubUpdateRequestDTO clubUpdateRequestDTO) {
         return new SuccessResponse<>(SUCCESS, clubService.updateClub(token, clubUpdateRequestDTO));
     }
 
     @DeleteMapping("/delete/{clubId}")
     @Operation(summary = "동호회 삭제", description = "자신이 관리자인 동호회를 삭제한다.")
-    public SuccessResponse<ClubDeleteResponseDTO> deleteClub(@RequestHeader("Authorization") String token,
+    public SuccessResponse<ClubDeleteResponseDTO> deleteClub(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                                              @PathVariable Long clubId) {
         return new SuccessResponse<>(SUCCESS, clubService.deleteClub(token, clubId));
     }
