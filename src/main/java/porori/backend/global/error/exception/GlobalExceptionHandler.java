@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({PostException.class})
-    protected ResponseEntity<FailResponse> handleMemberException(PostException exception) {
+    protected ResponseEntity<FailResponse> handlePostException(PostException exception) {
         return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getStatusCode())).body(new FailResponse(exception.getError()));
     }
 
