@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.club.model.entity.Club;
+import porori.backend.domain.comment.model.entity.Comment;
 import porori.backend.global.common.entity.BaseEntity;
 import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +40,9 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Subject subject;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
 
     @Builder
     protected Post(Long postId, Long userId, Club club, String title, String content, boolean isImportant, Subject subject) {

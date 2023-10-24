@@ -17,7 +17,7 @@ import java.util.List;
 import static porori.backend.global.common.status.SuccessStatus.CREATE_POST;
 import static porori.backend.global.common.status.SuccessStatus.SUCCESS;
 
-@Tag(name = "동호회 내 글 작성 및 수정 API")
+@Tag(name = "글 작성, 조회, 삭제 API")
 @RestController
 @RequestMapping("/api/clubs/posts")
 @RequiredArgsConstructor

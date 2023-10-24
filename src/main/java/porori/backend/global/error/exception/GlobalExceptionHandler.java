@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import porori.backend.domain.application.exception.ApplicationException;
 import porori.backend.domain.club.exception.ClubException;
+import porori.backend.domain.comment.exception.CommentException;
 import porori.backend.domain.member.exception.MemberException;
 import porori.backend.domain.post.exception.PostException;
 import porori.backend.domain.user.exception.UserException;
@@ -40,7 +41,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({PostException.class})
-    protected ResponseEntity<FailResponse> handleMemberException(PostException exception) {
+    protected ResponseEntity<FailResponse> handlePostException(PostException exception) {
+        return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getStatusCode())).body(new FailResponse(exception.getError()));
+    }
+
+    @ExceptionHandler({CommentException.class})
+    protected ResponseEntity<FailResponse> handleMemberException(CommentException exception) {
         return ResponseEntity.status(HttpStatus.valueOf(exception.getError().getStatusCode())).body(new FailResponse(exception.getError()));
     }
 }
