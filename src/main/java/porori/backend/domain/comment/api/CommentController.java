@@ -10,7 +10,10 @@ import porori.backend.domain.comment.model.dto.CommentResponseDTO;
 import porori.backend.domain.comment.service.CommentService;
 import porori.backend.global.common.dto.response.SuccessResponse;
 
+import java.util.List;
+
 import static porori.backend.global.common.status.SuccessStatus.CREATE_COMMENT;
+import static porori.backend.global.common.status.SuccessStatus.SUCCESS;
 
 @Tag(name = "댓글 작성, 조회, 삭제 API")
 @RestController
@@ -25,5 +28,12 @@ public class CommentController {
     public SuccessResponse<CommentResponseDTO> createComment(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                                              @RequestBody CommentCreateRequestDTO commentCreateRequestDTO) {
         return new SuccessResponse<>(CREATE_COMMENT, commentService.createComment(token, commentCreateRequestDTO));
+    }
+
+    @GetMapping("/all/{postId}")
+    @Operation(summary = "댓글 조회", description = "글에 대한 댓글을 조회한다.")
+    public SuccessResponse<List<CommentResponseDTO>> getAllComments(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
+                                                                    @PathVariable Long postId) {
+        return new SuccessResponse<>(SUCCESS, commentService.getAllComments(token, postId));
     }
 }
