@@ -15,7 +15,9 @@ import porori.backend.domain.post.repository.PostRepository;
 import porori.backend.domain.user.service.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static porori.backend.global.common.status.BaseStatus.ACTIVE;
 import static porori.backend.global.common.status.ErrorStatus.INVALID_POST;
 import static porori.backend.global.common.status.ErrorStatus.NOT_EXIST_MEMBER;
 
@@ -50,5 +52,22 @@ public class CommentService {
     private void verifyClubMember(Club club, Long userId) {
         if (!memberRepository.existsByClubAndUserId(club, userId))
             throw new CommentException(NOT_EXIST_MEMBER);
+    }
+
+    public List<CommentResponseDTO> getAllComments(String token, Long postId) {
+        Long userId = userService.getUserId(token);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CommentException(INVALID_POST));
+        Club club = post.getClub();
+        verifyClubMember(club, userId);
+
+        List<Comment> comments = commentRepository.findByPostAndStatus(post, ACTIVE);
+
+        return comments.stream()
+                .map(comment -> {
+                    Long writerId = comment.getUserId();
+                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(writerId)).get(0);
+                    boolean isWriter = writerId.equals(userId);
+                    return CommentResponseDTO.of(comment, memberResponseDTO, isWriter);
+                }).collect(Collectors.toList());
     }
 }
