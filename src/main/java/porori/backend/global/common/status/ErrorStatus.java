@@ -18,6 +18,7 @@ public enum ErrorStatus {
 
     INVALID_CLUB(400, "유효하지 않은 동호회 ID입니다."),
     INVALID_POST(400, "유효하지 않은 글 ID입니다."),
+    INVALID_COMMENT(400, "유효하지 않은 댓글 ID입니다."),
     INVALID_SUBJECT_TITLE(400, "유효하지 않은 동호회 주제입니다."),
     INVALID_POST_SUBJECT(400, "유효하지 않은 글 주제입니다."),
     EXIST_APPLICATION(400, "이미 가입 신청한 동호회입니다."),
@@ -29,6 +30,7 @@ public enum ErrorStatus {
     MANAGER_CANT_QUIT(403, "동호회 관리자는 동호회를 탈퇴할 수 없습니다."),
     NOT_CLUB_POST(403, "해당 동호회의 글의 아닙니다."),
     NOT_USER_POST(403, "현재 접속한 유저가 작성한 글이 아닙니다."),
+    NOT_USER_COMMENT(403, "현재 접속한 유저가 작성한 댓글이 아닙니다."),
 
     NOT_EXIST_APPLICATION(404, "신청 내역이 존재하지 않습니다."),
     NOT_EXIST_MEMBER(404, "동호회 회원이 아닙니다."),
