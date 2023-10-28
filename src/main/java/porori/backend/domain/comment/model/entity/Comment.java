@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import porori.backend.domain.post.model.entity.Post;
 import porori.backend.global.common.entity.BaseEntity;
+import porori.backend.global.common.status.BaseStatus;
 
 import javax.persistence.*;
 
@@ -34,5 +35,9 @@ public class Comment extends BaseEntity {
         this.userId = userId;
         this.post = post;
         this.content = content;
+    }
+
+    public void changeStatus(BaseStatus status) {
+        this.status = status;
     }
 }
