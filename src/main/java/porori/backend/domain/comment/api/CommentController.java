@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import porori.backend.domain.comment.model.dto.CommentCreateRequestDTO;
+import porori.backend.domain.comment.model.dto.CommentDeleteResponseDTO;
 import porori.backend.domain.comment.model.dto.CommentResponseDTO;
 import porori.backend.domain.comment.service.CommentService;
 import porori.backend.global.common.dto.response.SuccessResponse;
@@ -35,5 +36,12 @@ public class CommentController {
     public SuccessResponse<List<CommentResponseDTO>> getAllComments(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
                                                                     @PathVariable Long postId) {
         return new SuccessResponse<>(SUCCESS, commentService.getAllComments(token, postId));
+    }
+
+    @DeleteMapping("/delete/{commentId}")
+    @Operation(summary = "댓글 삭제", description = "자신이 작성한 댓글을 삭제한다.")
+    public SuccessResponse<CommentDeleteResponseDTO> deleteComment(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
+                                                                   @PathVariable Long commentId) {
+        return new SuccessResponse<>(SUCCESS, commentService.deleteComment(token, commentId));
     }
 }
