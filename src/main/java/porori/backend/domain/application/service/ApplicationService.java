@@ -13,6 +13,7 @@ import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
+import porori.backend.global.utils.Validator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +31,14 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ClubRepository clubRepository;
 
+    private final Validator validator;
+
     public ApplicationResponseDTO createApplication(String token, Long clubId) {
         Long userId = userService.getUserId(token);
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         verifyAlreadyApplied(club, userId);
-        verifyClubLimitMember(club);
+        validator.verifyClubLimitMember(club);
 
         Application application = Application.builder()
                 .club(club)
@@ -50,11 +53,6 @@ public class ApplicationService {
     private void verifyAlreadyApplied(Club club, Long userId) {
         if (applicationRepository.existsByClubAndUserId(club, userId))
             throw new ApplicationException(EXIST_APPLICATION);
-    }
-
-    private void verifyClubLimitMember(Club club) {
-        if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
-            throw new ApplicationException(FULL_CLUB_NUMBER);
     }
 
     public ApplicationResponseDTO acceptApplication(String token, Long clubId, Long userId) {

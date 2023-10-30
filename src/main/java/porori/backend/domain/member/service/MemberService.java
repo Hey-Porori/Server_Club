@@ -36,7 +36,7 @@ public class MemberService {
 
     public void addMember(Club club, Long userId, Role role) {
         Club findClub = clubRepository.findById(club.getClubId()).orElseThrow(() -> new ClubException(INVALID_CLUB));
-        verifyClubLimitMember(findClub);
+        validator.verifyClubLimitMember(findClub);
         findClub.increaseCurrentMemberNumber();
         clubRepository.save(findClub);
 
@@ -47,11 +47,6 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
-    }
-
-    private void verifyClubLimitMember(Club club) {
-        if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
-            throw new MemberException(FULL_CLUB_NUMBER);
     }
 
     public List<MemberResponseDTO> getMemberList(String token, Long clubId) {
