@@ -70,14 +70,7 @@ public class PostService {
 
         List<Post> posts = postRepository.findByClubAndStatus(club, ACTIVE);
 
-        return posts.stream()
-                .map(post -> {
-                    Long writerId = post.getUserId();
-                    MemberResponseDTO memberResponseDTO = userService.getMemberResponseDTO(List.of(writerId)).get(0);
-                    boolean isWriter = writerId.equals(userId);
-                    return PostResponseDTO.of(post, memberResponseDTO, isWriter);
-                })
-                .collect(Collectors.toList());
+        return convertPostEntityToDTO(posts, userId);
     }
 
     public List<PostResponseDTO> getSubjectPosts(String token, Long clubId, String subject) {
@@ -88,6 +81,10 @@ public class PostService {
 
         List<Post> posts = postRepository.findByClubAndSubjectAndStatus(club, valueOfSubject(subject), ACTIVE);
 
+        return convertPostEntityToDTO(posts, userId);
+    }
+
+    private List<PostResponseDTO> convertPostEntityToDTO(List<Post> posts, Long userId) {
         return posts.stream()
                 .map(post -> {
                     Long writerId = post.getUserId();
