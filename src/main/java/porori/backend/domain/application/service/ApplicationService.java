@@ -13,6 +13,7 @@ import porori.backend.domain.club.repository.ClubRepository;
 import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
+import porori.backend.global.utils.Validator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +31,14 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ClubRepository clubRepository;
 
+    private final Validator validator;
+
     public ApplicationResponseDTO createApplication(String token, Long clubId) {
         Long userId = userService.getUserId(token);
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         verifyAlreadyApplied(club, userId);
-        verifyClubLimitMember(club);
+        validator.verifyClubLimitMember(club);
 
         Application application = Application.builder()
                 .club(club)
@@ -52,14 +55,10 @@ public class ApplicationService {
             throw new ApplicationException(EXIST_APPLICATION);
     }
 
-    private void verifyClubLimitMember(Club club) {
-        if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
-            throw new ApplicationException(FULL_CLUB_NUMBER);
-    }
-
     public ApplicationResponseDTO acceptApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, managerId);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         memberService.addMember(club, userId, Role.MEMBER);
         Application application = changeApplicationStatus(club, userId, COMPLETED);
@@ -68,7 +67,8 @@ public class ApplicationService {
 
     public ApplicationResponseDTO rejectApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, managerId);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         Application application = changeApplicationStatus(club, userId, REJECTED);
         return ApplicationResponseDTO.from(application);
@@ -81,15 +81,10 @@ public class ApplicationService {
         return application;
     }
 
-    private Club verifyClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_CLUB_MANAGER);
-        return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
-    }
-
     public List<ApplicationResponseDTO> getApplicationList(String token, Long clubId) {
-        Long userId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, userId);
+        Long managerId = userService.getUserId(token);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         List<Application> applications = applicationRepository.findByClubAndApplicationStatus(club, APPLIED);
         return applications.stream()
