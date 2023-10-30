@@ -51,7 +51,7 @@ public class MemberService {
 
     private void verifyClubLimitMember(Club club) {
         if (club.getCurrentMemberNumber() >= club.getLimitMemberNumber())
-            throw new ApplicationException(FULL_CLUB_NUMBER);
+            throw new MemberException(FULL_CLUB_NUMBER);
     }
 
     public List<MemberResponseDTO> getMemberList(String token, Long clubId) {
@@ -95,6 +95,6 @@ public class MemberService {
 
     private void verifyQuitManager(Member member) {
         if (member.getRole().equals(Role.MANAGER))
-            throw new ClubException(MANAGER_CANT_QUIT);
+            throw new MemberException(MANAGER_CANT_QUIT);
     }
 }
