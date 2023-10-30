@@ -57,7 +57,8 @@ public class ApplicationService {
 
     public ApplicationResponseDTO acceptApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, managerId);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         memberService.addMember(club, userId, Role.MEMBER);
         Application application = changeApplicationStatus(club, userId, COMPLETED);
@@ -66,7 +67,8 @@ public class ApplicationService {
 
     public ApplicationResponseDTO rejectApplication(String token, Long clubId, Long userId) {
         Long managerId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, managerId);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         Application application = changeApplicationStatus(club, userId, REJECTED);
         return ApplicationResponseDTO.from(application);
@@ -79,15 +81,10 @@ public class ApplicationService {
         return application;
     }
 
-    private Club verifyClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_CLUB_MANAGER);
-        return clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
-    }
-
     public List<ApplicationResponseDTO> getApplicationList(String token, Long clubId) {
-        Long userId = userService.getUserId(token);
-        Club club = verifyClubManager(clubId, userId);
+        Long managerId = userService.getUserId(token);
+        validator.verifyClubManager(clubId, managerId);
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
 
         List<Application> applications = applicationRepository.findByClubAndApplicationStatus(club, APPLIED);
         return applications.stream()
