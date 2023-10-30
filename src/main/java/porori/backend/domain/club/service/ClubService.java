@@ -12,6 +12,7 @@ import porori.backend.domain.member.model.entity.Role;
 import porori.backend.domain.member.service.MemberService;
 import porori.backend.domain.user.service.UserService;
 import porori.backend.global.common.status.BaseStatus;
+import porori.backend.global.utils.Validator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +29,8 @@ public class ClubService {
     private final MemberService memberService;
 
     private final ClubRepository clubRepository;
+
+    private final Validator validator;
 
     public ClubCreateResponseDTO createClub(String token, ClubCreateRequestDTO clubCreateRequestDTO) {
         Long userId = userService.getUserId(token);
@@ -104,7 +107,7 @@ public class ClubService {
         Long clubId = clubUpdateRequestDTO.getClubId();
 
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
-        verifyClubManager(clubId, userId);
+        validator.verifyClubManager(clubId, userId);
         verifyCurrentClubMemberNumber(clubUpdateRequestDTO.getLimitMemberNumber(), findClub.getCurrentMemberNumber());
 
         Club club = Club.builder()
@@ -132,15 +135,10 @@ public class ClubService {
         Long userId = userService.getUserId(token);
 
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException(INVALID_CLUB));
-        verifyClubManager(clubId, userId);
+        validator.verifyClubManager(clubId, userId);
 
         findClub.changeStatus(BaseStatus.INACTIVE);
         clubRepository.save(findClub);
         return ClubDeleteResponseDTO.from(findClub);
-    }
-
-    private void verifyClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsByClubIdAndUserId(clubId, userId))
-            throw new ClubException(NOT_CLUB_MANAGER);
     }
 }
